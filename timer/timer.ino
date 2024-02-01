@@ -25,10 +25,12 @@ byte colPins[COLS] = {5, 4, 3, 2}; //connect to the column pinouts of the keypad
 Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 
 int tempo = 0;
+int pinLuce = 12;
 
 void setup(){
     Serial.begin(9600);
-    
+    pinMode(pinLuce, OUTPUT);
+    digitalWrite(pinLuce, LOW);
 
 }
 
@@ -55,6 +57,9 @@ void loop(){
     
 
       }else{
+
+        digitalWrite(pinLuce, HIGH);
+
         for(int i=0; i<tempo; i++){
           delay(1000);
           Serial.println(i);
@@ -63,7 +68,8 @@ void loop(){
         tempo=0;
 
       }
-       
+        digitalWrite(pinLuce, LOW);
+
       }
 
       
