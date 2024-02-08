@@ -26,12 +26,28 @@ char keys[ROWS][COLS] = {
 byte rowPins[ROWS] =  {9, 8, 7, 6};//connect to the row pinouts of the keypad
 byte colPins[COLS] = {5, 4, 3, 2}; //connect to the column pinouts of the keypad
 
+bool luceLCD = 0;
+
 Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 
 int tempo = 0;
 int pinLuce = 12;
 int memTempo = 0;
 
+void avvioTimer(int temp){
+
+        digitalWrite(pinLuce, HIGH);
+        lcd.setCursor(11, 3);
+        lcd.print(memTempo);
+        lcd.noBacklight();
+
+        for(int i=0; i<temp; i++){
+          delay(1000);
+          Serial.println(i);
+        }
+
+
+}
 
 void setup(){
     Serial.begin(9600);
@@ -85,16 +101,9 @@ void loop(){
 
       }else if(key == '*') {
 
-        digitalWrite(pinLuce, HIGH);
         memTempo = tempo;
-        lcd.setCursor(11, 3);
-        lcd.print(memTempo);
-        lcd.noBacklight();
 
-        for(int i=0; i<tempo; i++){
-          delay(1000);
-          Serial.println(i);
-        }
+        avvioTimer(tempo);
         
         tempo=0;
         lcd.setCursor(0, 1);
@@ -102,27 +111,18 @@ void loop(){
 
       }else if (key == 'A'){
         
-        digitalWrite(pinLuce, HIGH);
-        lcd.setCursor(11, 3);
-        lcd.print(memTempo);
-        lcd.noBacklight();
-
-        for(int i=0; i<memTempo; i++){
-          delay(1000);
-          Serial.println(i);
-        }
+        avvioTimer(memTempo);
         
         tempo=0;
         lcd.setCursor(0, 1);
         lcd.print(tempo);
 
-        
-
-      }
-        digitalWrite(pinLuce, LOW);
-
       }
 
-       delay(100);
+    digitalWrite(pinLuce, LOW);
 
     }
+
+    delay(100);
+
+  }
