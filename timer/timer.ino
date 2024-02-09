@@ -26,18 +26,18 @@ char keys[ROWS][COLS] = {
 byte rowPins[ROWS] =  {9, 8, 7, 6};//connect to the row pinouts of the keypad
 byte colPins[COLS] = {5, 4, 3, 2}; //connect to the column pinouts of the keypad
 
-bool luceLCD = 0;
-
 Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 
 int tempo = 0;
-int pinLuce = 12;
+int pinLuce = 10;
 int memTempo = 0;
+bool luceLCD = 0;
+
 
 void avvioTimer(int temp){
 
-        digitalWrite(pinLuce, HIGH);
-        lcd.setCursor(11, 3);
+        digitalWrite(pinLuce, LOW);
+        lcd.setCursor(9, 3);
         lcd.print(memTempo);
         lcd.noBacklight();
 
@@ -46,13 +46,15 @@ void avvioTimer(int temp){
           Serial.println(i);
         }
 
+    digitalWrite(pinLuce, HIGH);
+
 
 }
 
 void setup(){
     Serial.begin(9600);
     pinMode(pinLuce, OUTPUT);
-    digitalWrite(pinLuce, LOW);
+    digitalWrite(pinLuce, HIGH);
 
     lcd.init();
     lcd.backlight();
@@ -65,7 +67,6 @@ void setup(){
 }
 
 void loop(){
-    lcd.backlight();
 
     lcd.setCursor(0, 0);
     lcd.print("Secondi: ");
@@ -73,14 +74,53 @@ void loop(){
     lcd.setCursor(0, 3);
     lcd.print("Memoria: ");
 
-    lcd.setCursor(11, 3);
+    lcd.setCursor(9, 3);
+    lcd.print("    ");
+    lcd.setCursor(9, 3);
     lcd.print(memTempo);
 
     char key = keypad.getKey();
 
     if (key){
+      Serial.println(key);
+      if(key == '*') {
 
-      if(isalnum(key)){
+        memTempo = tempo;
+
+        avvioTimer(tempo);
+        
+        tempo=0;
+        lcd.setCursor(0, 1);
+        lcd.print("    ");
+        lcd.setCursor(0, 1);
+
+      }else if (key == 'A'){
+        
+        avvioTimer(memTempo);
+        
+        tempo=0;
+        lcd.setCursor(0, 1);
+        lcd.print(tempo);
+
+      }else if (key == 'C'){
+        
+        tempo=0;
+        lcd.setCursor(0, 1);
+        lcd.print("     ");
+
+      }
+       else if (key == 'D'){
+        
+        if(luceLCD==0){
+            lcd.noBacklight();
+            
+        }else{
+            lcd.backlight();
+
+        }
+        luceLCD = !luceLCD;
+      }
+      else{
         //Serial.print("key principale: ");
         //Serial.println(key);
         //Serial.println(int(key)-48);
@@ -99,27 +139,8 @@ void loop(){
         lcd.print(tempo);
 
 
-      }else if(key == '*') {
-
-        memTempo = tempo;
-
-        avvioTimer(tempo);
-        
-        tempo=0;
-        lcd.setCursor(0, 1);
-        lcd.print(tempo);
-
-      }else if (key == 'A'){
-        
-        avvioTimer(memTempo);
-        
-        tempo=0;
-        lcd.setCursor(0, 1);
-        lcd.print(tempo);
-
       }
 
-    digitalWrite(pinLuce, LOW);
 
     }
 
