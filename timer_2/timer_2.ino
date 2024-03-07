@@ -52,7 +52,6 @@ void avvioTimer(int temp){
     }
 
   display.clear();
-  //display2.setBrightness(4, false);  // Turn off
   display.setBrightness(4, true);  // Turn off
   
   digitalWrite(pinLuce, HIGH);
@@ -64,8 +63,6 @@ void setup(){
     pinMode(pinLuce, OUTPUT);
     digitalWrite(pinLuce, HIGH);
 
-    //display1.setBrightness(0x0f);
-    //display2.setBrightness(0x0f);
     display.setBrightness(4, true);  // Turn off
 
     display.clear();
