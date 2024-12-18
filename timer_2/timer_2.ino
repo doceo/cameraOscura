@@ -38,23 +38,41 @@ int pinLuce = 12;
 int memTempo = 0;
 bool luceLCD = 0;
 
+bool statoLuce = LOW;
 
 void avvioTimer(int temp){
     display.clear();
-    display.setBrightness(2, true);  // Turn off
+    display.setBrightness(4, true);  // Turn off
 
     digitalWrite(pinLuce, LOW);
     
     for(int i=1; i<=temp; i++){
-      delay(1000);      
+      delay(1000);
       display.showNumberDec(i, false); // Expect: ___1
-    
+      if (keypad.getKey() == "B") { i = temp;}
     }
-
-  display.clear();
+    display.clear();
+  //display2.setBrightness(4, false);  // Turn off
   display.setBrightness(4, true);  // Turn off
   
   digitalWrite(pinLuce, HIGH);
+}
+
+
+void avvioLuce(){
+    display.clear();
+    display.setBrightness(2, true);  // Turn off
+    display.showNumberDec(99, false); // Expect: ___1
+
+    if (statoLuce){ 
+      digitalWrite(pinLuce, LOW);
+      statoLuce = LOW;
+    }
+    else {
+      digitalWrite(pinLuce, HIGH);
+      statoLuce = HIGH;
+    }
+    display.clear();
 
 }
 
@@ -66,9 +84,8 @@ void setup(){
     display.setBrightness(4, true);  // Turn off
 
     display.clear();
-
-
 }
+
 
 void loop(){
 
@@ -96,6 +113,12 @@ void loop(){
         display.clear(); // Expect: ___1
 
       }
+      else if (key == 'D'){
+        
+        tempo=0;
+        avvioLuce();
+
+      }
       
       else{
 
@@ -111,5 +134,7 @@ void loop(){
       }
 
     }
+
+
 
   }
